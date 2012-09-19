@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMSApi", "SMSApi\SMSApi.csproj", "{891A045E-8799-4B76-88F3-A0ACF38D5DB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiExample", "ConsoleApplication1\ApiExample.csproj", "{3F37157D-1CFB-4B38-87A4-15D71D049C97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiExample", "ApiExample\ApiExample.csproj", "{3F37157D-1CFB-4B38-87A4-15D71D049C97}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
