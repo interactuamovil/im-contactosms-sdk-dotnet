@@ -19,4 +19,4 @@ Para hacer llamadas al API puede utilizarse `Contacts`, `Groups`, `Messages` y
 Documentación
 -------------
 
-La documentación del SDK DotNet se encontra en el wiki: [Ver documentación](https://github.com/interactuamovil/im-contactosms-sdk-dotnet/wiki)
+La documentación del SDK DotNet se encuentra en el wiki: [Ver documentación](https://github.com/interactuamovil/im-contactosms-sdk-dotnet/wiki)
