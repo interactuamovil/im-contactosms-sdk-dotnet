@@ -8,6 +8,16 @@ namespace InteractuaMovil.ContactoSms.Api
     public class ResponseObjects
     {
 
+        public class AccountStatusResponse
+        {
+            public string name { get; set; }
+            public string sms_short_name { get; set; }
+            public string sms_subscription_type { get; set; }
+            public string sms_optin_keyword { get; set; }
+            public int messages_limit { get; set; }
+            public int messages_sent { get; set; }            
+        }
+
         public class ContactResponse
         {
             public string msisdn { get; set; }
@@ -61,7 +71,7 @@ namespace InteractuaMovil.ContactoSms.Api
 
         public class MessageToGroupResponse
         {
-            public int sms_count { get; set; }
+            public int sms_sent { get; set; }
             public string sms_message { get; set; }
         }
 
@@ -79,14 +89,6 @@ namespace InteractuaMovil.ContactoSms.Api
         {
             public string short_name{ get; set; }
         }
-
-        public class AccountStatusResponse
-        {
-            public string status { get; set; }
-            public int message_limit { get; set; }
-            public int message_count { get; set; }
-            public int message_max { get; set; }
-            public int messages_above_limit { get; set; }
-        }
+        
     }
 }

@@ -61,11 +61,10 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="Msisdn">Country code + phone number</param>
         /// <param name="FirstName">Updated contacts first name</param>
-        /// <param name="LastName">Updated contacts last name</param>
-        /// <param name="Status">0 =PENDING, 1 = CONFIRMED, 2 =  CANCELLED</param>
+        /// <param name="LastName">Updated contacts last name</param>        
         /// <param name="NewMsisdn">msisdn to update the current one</param>
         /// <returns>Object with the result message</returns>
-        public object Update(string Msisdn, string FirstName = null, string LastName = null, int Status = -1, string NewMsisdn = null)
+        public object Update(string Msisdn, string FirstName = null, string LastName = null, string NewMsisdn = null)
         {
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
             Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
@@ -77,9 +76,7 @@ namespace InteractuaMovil.ContactoSms.Api
             if (FirstName != null)
                 Parameters.Add("first_name", FirstName);
             if (LastName != null)
-                Parameters.Add("last_name", LastName);
-            if (Status != -1)
-                Parameters.Add("status", Status.ToString());
+                Parameters.Add("last_name", LastName);            
 
             object serverResponse = this.RequestToApi("contacts/" + Msisdn, request.put, UrlParameters, Parameters);
             if (serverResponse.GetType() == typeof(List<string>))
@@ -93,22 +90,21 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="Msisdn">country code + phone number</param>
         /// <param name="FirstName">contacts first name</param>
-        /// <param name="LastName">contacts last name</param>
-        /// <param name="Status">0 =PENDING, 1 = CONFIRMED, 2 =  CANCELLED</param>
+        /// <param name="LastName">contacts last name</param>        
         /// <returns></returns>
-        public object Add(string Msisdn, string FirstName, string LastName, int Status)
+        public object Add(string Msisdn, string FirstName, string LastName)
         {
            Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
            Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
-
+           
            UrlParameters.Add("msisdn", Msisdn);
 
+           if (Msisdn != null)
+               Parameters.Add("msisdn", Msisdn.ToString());
            if (FirstName != null)
                Parameters.Add("first_name", FirstName);
            if (LastName != null)
-               Parameters.Add("last_name", LastName);
-           if (Status != -1)
-               Parameters.Add("status", Status.ToString());
+               Parameters.Add("last_name", LastName);           
 
            object serverResponse = this.RequestToApi("contacts/" + Msisdn, request.post, UrlParameters, Parameters);
            if (serverResponse.GetType() == typeof(List<string>))
