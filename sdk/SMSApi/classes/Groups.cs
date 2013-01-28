@@ -9,6 +9,7 @@ namespace InteractuaMovil.ContactoSms.Api
     internal class Groups: ApiRequest, interfaces.IGroups
     {
         internal Groups(string ApiKey, string SecretKey, string ApiUrl) : base(ApiKey, SecretKey, ApiUrl) { }
+        internal Groups(string ApiKey, string SecretKey, string ApiUrl, string ProxyAddress, string UserName, string Password) : base(ApiKey, SecretKey, ApiUrl, ProxyAddress, UserName, Password) { }
 
         /// <summary>
         /// Gets the list of groups for the account
