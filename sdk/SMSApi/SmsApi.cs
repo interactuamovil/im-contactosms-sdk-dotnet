@@ -20,5 +20,13 @@ namespace InteractuaMovil.ContactoSms.Api
             this.Messages = new Messages(ApiKey, SecretKey, ApiUrl);
         }
 
+        public SmsApi(string ApiKey, string SecretKey, string ApiUrl, string ProxyAddress, string UserName, string Password)
+        {
+            this.Account = new Accounts(ApiKey, SecretKey, ApiUrl, ProxyAddress, UserName, Password);
+            this.Contacts = new Contacts(ApiKey, SecretKey, ApiUrl, ProxyAddress, UserName, Password);
+            this.Groups = new Groups(ApiKey, SecretKey, ApiUrl, ProxyAddress, UserName, Password);
+            this.Messages = new Messages(ApiKey, SecretKey, ApiUrl, ProxyAddress, UserName, Password);        
+        }
+
     }
 }
