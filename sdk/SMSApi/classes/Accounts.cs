@@ -9,6 +9,7 @@ namespace InteractuaMovil.ContactoSms.Api
     internal class Accounts : ApiRequest, interfaces.IAccounts
     {
         internal Accounts(string ApiKey, string SecretKey, string ApiUrl) : base (ApiKey, SecretKey, ApiUrl) { }
+        internal Accounts(string ApiKey, string SecretKey, string ApiUrl, string ProxyAddress, string Username, string Password) : base(ApiKey, SecretKey, ApiUrl, ProxyAddress, Username, Password) { }
 
         /// <summary>
         /// Returns the account general information

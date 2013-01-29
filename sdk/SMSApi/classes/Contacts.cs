@@ -9,6 +9,7 @@ namespace InteractuaMovil.ContactoSms.Api
     internal class Contacts : ApiRequest, interfaces.IContacts
     {
         internal Contacts(string ApiKey, string SecretKey, string ApiUrl) : base (ApiKey, SecretKey, ApiUrl) { }
+        internal Contacts(string ApiKey, string SecretKey, string ApiUrl, string ProxyAddress, string UserName, string Password) : base(ApiKey, SecretKey, SecretKey, ProxyAddress, UserName, Password) { }
 
         /// <summary>
         /// Gets a contact list

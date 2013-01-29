@@ -16,19 +16,32 @@ namespace InteractuaMovil.ContactoSms.Api
         private string _BaseUrl;
         private string _ApiKey;
         private string _SecretKey;
+        private WebProxy _Proxy;
 
         public enum request { get, post, put, delete }
 
-        public ApiRequest(string ApiKey, string SecretKey, string ApiUrl) : base()
+        public ApiRequest(string ApiKey, string SecretKey, string ApiUrl)
+            : base()
         {
             this.ApiKey = ApiKey;
             this.SecretKey = SecretKey;
             this._BaseUrl = ApiUrl;
         }
 
+        public ApiRequest(string ApiKey, string SecretKey, string ApiUrl, string ProxyAddress, string UserName, string Password)
+            : this(ApiKey, SecretKey, ApiUrl)
+        {
+
+            NetworkCredential credentials = new NetworkCredential(UserName, Password);
+
+            _Proxy = new WebProxy(ProxyAddress);
+            _Proxy.Credentials = credentials;
+
+        }
+
         public string BaseUrl
         {
-            get{return _BaseUrl;}
+            get { return _BaseUrl; }
         }
 
         public string ApiKey
@@ -49,12 +62,12 @@ namespace InteractuaMovil.ContactoSms.Api
             var jss = new JavaScriptSerializer();
             string date = DateTime.Now.ToString("r");
             string cannonical, b64mac, hash;
-            Dictionary<string, string> headers = new Dictionary<string,string>();
+            Dictionary<string, string> headers = new Dictionary<string, string>();
 
             if (BodyParams != null)
                 if (BodyParams.Count > 0)
                     data = JsonConvert.SerializeObject(BodyParams);
-                    //data = jss.Serialize(BodyParams);
+            //data = jss.Serialize(BodyParams);
 
             if (UrlParams != null)
                 if (UrlParams.Count > 0)
@@ -77,7 +90,7 @@ namespace InteractuaMovil.ContactoSms.Api
             return SendRequest(Url, headers, RType, data);
         }
 
-        public object SendRequest(string Url, Dictionary<string, string> Headers, request RType, string BodyParams=null)
+        public object SendRequest(string Url, Dictionary<string, string> Headers, request RType, string BodyParams = null)
         {
             Url = BaseUrl + Url;
             try
@@ -86,7 +99,12 @@ namespace InteractuaMovil.ContactoSms.Api
                 byte[] byteArray = Encoding.UTF8.GetBytes(BodyParams);
                 string requestType = this.GetRequestType(RType);
                 var jss = new JavaScriptSerializer();
-            
+
+                if (_Proxy != null) {
+                    request.Proxy = _Proxy;
+                }
+
+
                 request.Method = requestType;
                 if (BodyParams.Length > 2)
                     request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
@@ -95,7 +113,7 @@ namespace InteractuaMovil.ContactoSms.Api
                     if (key != "Date")
                         request.Headers.Add(key, Headers[key].ToString());
                 request.Date = Convert.ToDateTime(Headers["Date"]);
-            
+
                 Stream dataStream = request.GetRequestStream();
                 dataStream.Write(byteArray, 0, byteArray.Length);
                 dataStream.Close();
@@ -110,7 +128,7 @@ namespace InteractuaMovil.ContactoSms.Api
                 reader.Close();
                 dataStream.Close();
                 response.Close();
-                
+
                 //return jss.DeserializeObject(serverResponse);
                 return serverResponse;
             }
