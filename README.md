@@ -16,7 +16,8 @@ Para hacer llamadas al API puede utilizarse `Contacts`, `Groups`, `Messages` y
 	ResponseObjects.AccountStatusResponse account = (ResponseObjects.AccountStatusResponse) sdk.Account.Status();
 	ResponseObjects.MessageToGroupResponse response = (ResponseObjects.MessageToGroupResponse) sdk.Messages.SendToContact(msisdn, "Prueba de mensaje");
 
-Documentación
--------------
+Descarga
+--------
+Para descargar el último binario (dll): [im-contactosms-sdk-dotnet-0.1.2.zip](https://www.dropbox.com/s/qx60cr30codrq06/im-contactosms-sdk-dotnet-0.1.2.zip)
 
-La documentación del SDK DotNet se encuentra en el wiki: [Ver documentación](https://github.com/interactuamovil/im-contactosms-sdk-dotnet/wiki)
+
