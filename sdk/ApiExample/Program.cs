@@ -35,22 +35,50 @@ namespace ApiExample
 
         private static void AccountStatus()
         {
+            Console.WriteLine("Demo API SDK .net");
+            Console.WriteLine("==============================================");
+            Console.WriteLine("Prueba Consulta Status");
 
-            ResponseObjects.AccountStatusResponse account = (ResponseObjects.AccountStatusResponse) sdk.Account.Status();
-            Console.WriteLine("Nombre de la cuenta: {0}", account.name);
-            Console.WriteLine("Nombre corto sms: {0}", account.sms_short_name);
-            Console.WriteLine("Tipo de suscripcion sms: {0}", account.sms_subscription_type);
-            Console.WriteLine("Keyword de optin: {0}", account.sms_optin_keyword);
-            Console.WriteLine("Limite de mensajes: {0}", account.messages_limit);
-            Console.WriteLine("Mensajes enviados: {0}", account.messages_sent);
+            ResponseObjects.ApiResponse<ResponseObjects.AccountStatusResponse> account = sdk.Account.Status();
+            Console.WriteLine("HTTP Response [{0}]: {1}", (int)account.httpCode, account.httpDescription);
+            Console.WriteLine("JSON: {0}", account.response);
+            Console.WriteLine("----");
+
+            if (account.isOk)
+            {
+                Console.WriteLine("Nombre de la cuenta: {0}", account.data.name);
+                Console.WriteLine("Nombre corto sms: {0}", account.data.sms_short_name);
+                Console.WriteLine("Tipo de suscripcion sms: {0}", account.data.sms_subscription_type);
+                Console.WriteLine("Keyword de optin: {0}", account.data.sms_optin_keyword);
+                Console.WriteLine("Limite de mensajes: {0}", account.data.messages_limit);
+                Console.WriteLine("Mensajes enviados: {0}", account.data.messages_sent);
+            }
+            else
+            {
+                Console.WriteLine("Error[{0}]: {1}", account.errorCode, account.errorDescription);
+            }
 
         }                
 
         private static void SendSingleContactoMessage()
         {
+            Console.WriteLine();
+            Console.WriteLine("==============================================");
+            Console.WriteLine("Prueba Envio Mensaje");
+            ResponseObjects.ApiResponse<ResponseObjects.MessageToGroupResponse> response = sdk.Messages.SendToContact(msisdn, "Prueba de mensaje");
+            Console.WriteLine("HTTP Response [{0}]: {1}", (int)response.httpCode, response.httpDescription);
+            Console.WriteLine("JSON: {0}", response.response);
+            Console.WriteLine("----");
 
-            ResponseObjects.MessageToGroupResponse response = (ResponseObjects.MessageToGroupResponse) sdk.Messages.SendToContact(msisdn, "Prueba de mensaje");            
-            Console.WriteLine("Enviados: {0}", response.sms_sent);
+            if (response.isOk)
+            {
+                Console.WriteLine("Enviado: {0}", response.data.sms_sent);
+                Console.WriteLine("Mensaje: {0}", response.data.sms_message);
+            }
+            else
+            {
+                Console.WriteLine("Error[{0}]: {1}", response.errorCode, response.errorDescription);
+            }
 
         }
 

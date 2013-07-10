@@ -19,9 +19,11 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="EndDate">TO this date</param>
         /// <param name="Start">From this message on the list</param>
         /// <param name="Limit">Maximun number of records</param>
-        /// <param name="Msisdn">country code and phone number</param>
+        /// <param name="Msisdn">Country code and phone number</param>
+        /// <param name="ShortName">Filter all messages sent to specified group's short_name</param>
+        /// <param name="Include_Recipients">If true it will include the list of recipients for each message</param>
         /// <returns>Object with the message list</returns>
-        public object GetList(DateTime? StartDate = null, DateTime? EndDate = null, int Start=-1, int Limit=-1, string Msisdn=null)
+        public ResponseObjects.ApiResponse<List<MessageResponse>> GetList(DateTime? StartDate = null, DateTime? EndDate = null, Int32 Start = -1, Int32 Limit = -1, String Msisdn = null, String ShortName = null, Boolean IncludeRecipients = false)
         { 
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
             
@@ -36,12 +38,18 @@ namespace InteractuaMovil.ContactoSms.Api
                 UrlParameters.Add("limit", Limit.ToString());
             if ( Msisdn != null)
                 UrlParameters.Add("msisdn", Msisdn);
+            if ( ShortName != null)
+                UrlParameters.Add("short_name", ShortName);
+            UrlParameters.Add("include_recipients", IncludeRecipients.ToString().ToLower());
 
-            object serverResponse = this.RequestToApi("messages", request.get, UrlParameters, null, true);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<List<MessageResponse>>((string)serverResponse);
+            ResponseObjects.ApiResponse<List<MessageResponse>> serverResponse = this.RequestToApi<List<MessageResponse>>("messages", request.get, UrlParameters, null, true);
+            return serverResponse;
+
+            //object serverResponse = this.RequestToApi("messages", request.get, UrlParameters, null, true);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<List<MessageResponse>>((string)serverResponse);
         }
 
         /// <summary>
@@ -50,17 +58,20 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="ShortName">String array with the group's short names</param>
         /// <param name="Message">Messages content</param>
         /// <returns>Object with message and account information</returns>
-        public object SendToGroups (string[] ShortName, string Message)
+        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToGroups(String[] ShortName, String Message)
         { 
             Dictionary<string, object> Parameters = new Dictionary<string, object>();
 			Parameters.Add("groups", ShortName);
 			Parameters.Add("message", Message);
 
-            object serverResponse = this.RequestToApi("messages/send", request.post, null, Parameters);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<MessageToGroupResponse>((string)serverResponse);
+            ResponseObjects.ApiResponse<MessageToGroupResponse> serverResponse = this.RequestToApi<MessageToGroupResponse>("messages/send", request.post, null, Parameters);
+            return serverResponse;
+
+            //object serverResponse = this.RequestToApi("messages/send", request.post, null, Parameters);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<MessageToGroupResponse>((string)serverResponse);
         }
 
         /// <summary>
@@ -69,30 +80,35 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="Msisdn">country code and phone number</param>
         /// <param name="Message">Messages content</param>
         /// <returns>Object with message info</returns>
-        public object SendToContact (string Msisdn, string Message) 
+        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToContact(String Msisdn, String Message) 
         {
             Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
             Parameters.Add("msisdn", Msisdn);
             Parameters.Add("message", Message);
 
-            object serverResponse = this.RequestToApi("messages/send_to_contact", request.post, null, Parameters);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<MessageToGroupResponse>((string)serverResponse);
+            ResponseObjects.ApiResponse<MessageToGroupResponse> serverResponse = this.RequestToApi<MessageToGroupResponse>("messages/send_to_contact", request.post, null, Parameters);
+            return serverResponse;
+
+            //object serverResponse = this.RequestToApi("messages/send_to_contact", request.post, null, Parameters);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<MessageToGroupResponse>((string)serverResponse);
         }
 
         /// <summary>
         /// Gets all the active schedule messages
         /// </summary>
         /// <returns></returns>
-        public object GetSchedule () 
+        public ResponseObjects.ApiResponse<List<ScheduleMessageResponse>> GetSchedule() 
         {
-            object serverResponse = this.RequestToApi("messages/scheduled", request.get, null, null);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<List<ScheduleMessageResponse>>((string)serverResponse);
+            ResponseObjects.ApiResponse<List<ScheduleMessageResponse>> serverResponse = this.RequestToApi<List<ScheduleMessageResponse>>("messages/scheduled", request.get, null, null);
+            return serverResponse;
+            //object serverResponse = this.RequestToApi("messages/scheduled", request.get, null, null);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<List<ScheduleMessageResponse>>((string)serverResponse);
         }
 
         /// <summary>
@@ -100,16 +116,18 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="MessageId">Message ID to delete</param>
         /// <returns>Object with result message</returns>
-        public object RemoveSchedule (string MessageId) 
+        public ResponseObjects.ApiResponse<ActionMessageResponse> RemoveSchedule(String MessageId) 
         { 
             Dictionary<string, dynamic> Parameters = new Dictionary<string,dynamic>();
             Parameters.Add("message_id", MessageId);
 
-            object serverResponse = this.RequestToApi("messages/scheduled", request.delete, null, Parameters);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
+            ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("messages/scheduled", request.delete, null, Parameters);
+            return serverResponse;
+            //object serverResponse = this.RequestToApi("messages/scheduled", request.delete, null, Parameters);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
         }
 
         /// <summary>
@@ -123,7 +141,7 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="Frequency">How often send the message Ex. ONCE</param>
         /// <param name="Groups">String array with the groups' short names where to send to the message</param>
         /// <returns>Object with schedule message info</returns>
-        public object AddSchedule (DateTime StartDate, DateTime EndDate, string Name, string Message, string Time, string Frequency, string[] Groups)
+        public ResponseObjects.ApiResponse<ActionMessageResponse> AddSchedule(DateTime StartDate, DateTime EndDate, String Name, String Message, String Time, String Frequency, String[] Groups)
         {
             Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
 
@@ -135,11 +153,13 @@ namespace InteractuaMovil.ContactoSms.Api
             Parameters.Add("frequency", Frequency.ToUpper());
             Parameters.Add("groups", Groups);
 
-            object serverResponse = this.RequestToApi("messages/scheduled", request.post, null, Parameters);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
+            ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("messages/scheduled", request.post, null, Parameters);
+            return serverResponse;
+            //object serverResponse = this.RequestToApi("messages/scheduled", request.post, null, Parameters);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
         }
 
         /// <summary>
@@ -152,7 +172,7 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="Msisdn">country code and phone number</param>
         /// <param name="Status">0 =PENDING, 1 = CONFIRMED, 2 =  CANCELLED</param>
         /// <returns>Object with the messages list</returns>
-        public object Inbox (DateTime? StartDate=null, DateTime? EndDate=null, int Start=-1, int Limit=-1, string Msisdn=null,  int Status=-1)
+        public ResponseObjects.ApiResponse<List<InboxMessageResponse>> Inbox(DateTime? StartDate = null, DateTime? EndDate = null, Int32 Start = -1, Int32 Limit = -1, String Msisdn = null, Int32 Status = -1)
         {
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
 
@@ -170,11 +190,14 @@ namespace InteractuaMovil.ContactoSms.Api
             if ( Status != -1 )
                 UrlParameters.Add("status", Status.ToString());
 
-            object serverResponse = this.RequestToApi("messages/messages_inbox", request.get, UrlParameters, null, true);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<List<InboxMessageResponse>>((string)serverResponse);
+            ResponseObjects.ApiResponse<List<InboxMessageResponse>> serverResponse = this.RequestToApi<List<InboxMessageResponse>>("messages/inbox", request.get, UrlParameters, null, true);
+            return serverResponse;
+            //object serverResponse = this.RequestToApi("messages/messages_inbox", request.get, UrlParameters, null, true);
+            //object serverResponse = this.RequestToApi("messages/inbox", request.get, UrlParameters, null, true);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<List<InboxMessageResponse>>((string)serverResponse);
         }
     }
 }

@@ -56,10 +56,11 @@ namespace InteractuaMovil.ContactoSms.Api
             set { _SecretKey = value; }
         }
 
-        public object RequestToApi(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, dynamic> BodyParams = null, bool AddToQueryString = false)
+        //public object RequestToApi(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, dynamic> BodyParams = null, bool AddToQueryString = false)
+        public ApiResponse<T> RequestToApi<T>(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, dynamic> BodyParams = null, bool AddToQueryString = false)
         {
             string data = "", filters = "";
-            var jss = new JavaScriptSerializer();
+            //var jss = new JavaScriptSerializer();
             string date = DateTime.Now.ToString("r");
             string cannonical, b64mac, hash;
             Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -87,20 +88,25 @@ namespace InteractuaMovil.ContactoSms.Api
             if (AddToQueryString && filters.Length > 0)
                 Url += "?" + filters;
 
-            return SendRequest(Url, headers, RType, data);
+            //return SendRequest(Url, headers, RType, data);
+            return SendRequest<T>(Url, headers, RType, data);
         }
 
-        public object SendRequest(string Url, Dictionary<string, string> Headers, request RType, string BodyParams = null)
+        //public object SendRequest(string Url, Dictionary<string, string> Headers, request RType, string BodyParams = null)
+        public ApiResponse<T> SendRequest<T>(string Url, Dictionary<string, string> Headers, request RType, string BodyParams = null)
         {
+            ApiResponse<T> dataResponse = new ApiResponse<T>();
+
             Url = BaseUrl + Url;
             try
             {
                 var request = (HttpWebRequest)WebRequest.Create(Url);
                 byte[] byteArray = Encoding.UTF8.GetBytes(BodyParams);
                 string requestType = this.GetRequestType(RType);
-                var jss = new JavaScriptSerializer();
+                //var jss = new JavaScriptSerializer();
 
-                if (_Proxy != null) {
+                if (_Proxy != null)
+                {
                     request.Proxy = _Proxy;
                 }
 
@@ -112,32 +118,79 @@ namespace InteractuaMovil.ContactoSms.Api
                 foreach (string key in Headers.Keys)
                     if (key != "Date")
                         request.Headers.Add(key, Headers[key].ToString());
-                request.Date = Convert.ToDateTime(Headers["Date"]);
+                //request.Date = Convert.ToDateTime(Headers["Date"]);
+                request.Date = DateTime.Parse(Headers["Date"], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal);
 
                 Stream dataStream = request.GetRequestStream();
                 dataStream.Write(byteArray, 0, byteArray.Length);
                 dataStream.Close();
 
                 WebResponse response = request.GetResponse();
-                int responseCode = (int)(((HttpWebResponse)response).StatusCode);
-                if (responseCode == 403)
-                    throw new System.ArgumentException("Invalid authentication");
+                dataResponse.httpCode = ((HttpWebResponse)response).StatusCode;
+                dataResponse.httpDescription = ((HttpWebResponse)response).StatusDescription;
+
+                if (dataResponse.httpCode != System.Net.HttpStatusCode.OK)
+                {
+                    dataResponse.errorCode = (int)dataResponse.httpCode;
+                    dataResponse.errorDescription = dataResponse.httpDescription;
+                }
+
                 dataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(dataStream);
-                string serverResponse = reader.ReadToEnd();
+                dataResponse.response = reader.ReadToEnd();
                 reader.Close();
                 dataStream.Close();
-                response.Close();
 
+                if (dataResponse.errorCode == 403)
+                {
+                    ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.response);
+                    dataResponse.errorDescription = errorResponse.error;
+                    //dataResponse.errorDescription = "Invalid Authentication";
+                }
+                else
+                {
+                    dataResponse.data = JsonConvert.DeserializeObject<T>(dataResponse.response); 
+                }
+
+                response.Close();
                 //return jss.DeserializeObject(serverResponse);
-                return serverResponse;
+            }
+            catch (WebException e)
+            {
+                dataResponse.httpCode = (System.Net.HttpStatusCode)Convert.ToInt32(e.Response.Headers["Status"]);
+                dataResponse.httpDescription = e.Message;
+
+                Stream dataStream = e.Response.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                dataResponse.response = reader.ReadToEnd();
+                reader.Close();
+                dataStream.Close();
+
+                if (dataResponse.response != null) 
+                {
+                    ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.response);
+                    if (errorResponse.code != 0)
+                    {
+                        dataResponse.errorCode = errorResponse.code;
+                    }
+                    else
+                    {
+                        dataResponse.errorCode = (int)dataResponse.httpCode;
+                    }
+                    dataResponse.errorDescription = errorResponse.error;
+                }
             }
             catch (Exception e)
             {
-                List<string> error = new List<string>();
-                error.Add("Error|" + e.Message);
-                return error;
+                dataResponse.errorCode = -1;
+                dataResponse.errorDescription = e.Message;
             }
+            finally
+            {
+                
+            }
+
+            return dataResponse;
         }
 
         private string GetRequestType(request RType)

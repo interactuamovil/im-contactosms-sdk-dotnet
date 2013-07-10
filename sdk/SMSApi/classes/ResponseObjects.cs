@@ -7,88 +7,121 @@ namespace InteractuaMovil.ContactoSms.Api
 {
     public class ResponseObjects
     {
+        public class ApiResponse<T>
+        {
+            public String response { get; set; }
+            public T data { get; set; }
+            public System.Net.HttpStatusCode httpCode { get; set; }
+            public String httpDescription { get; set; }
+            public Int32 errorCode { get; set; }
+            public String errorDescription { get; set; }
+
+            public ApiResponse()
+            {
+                response = String.Empty;
+                data = default(T);
+                errorCode = Convert.ToInt32(System.Net.HttpStatusCode.OK);
+                errorDescription = System.Net.HttpStatusCode.OK.ToString();
+            }
+
+            public Boolean isOk
+            {
+                get { return (httpCode == System.Net.HttpStatusCode.OK); }
+            }
+        }
+
+        public class ErrorResponse
+        {
+            public Int32 code { get; set; }
+            public String error { get; set; }
+        }
 
         public class AccountStatusResponse
         {
-            public string name { get; set; }
-            public string sms_short_name { get; set; }
-            public string sms_subscription_type { get; set; }
-            public string sms_optin_keyword { get; set; }
-            public int messages_limit { get; set; }
-            public int messages_sent { get; set; }            
+            public String name { get; set; }
+            public String sms_short_name { get; set; }
+            public String sms_subscription_type { get; set; }
+            public String sms_optin_keyword { get; set; }
+            public Int32 messages_limit { get; set; }
+            public Int32 messages_sent { get; set; }            
         }
 
         public class ContactResponse
         {
-            public string msisdn { get; set; }
-            public string first_name { get; set; }
-            public string last_name { get; set; }
-            public string status { get; set; }
+            public String msisdn { get; set; }
+            public String first_name { get; set; }
+            public String last_name { get; set; }
+            public String status { get; set; }
         }
 
         public class ActionMessageResponse
         {
-            public string result { get; set; }
+            public String result { get; set; }
         }
 
         public class GroupResponse
         {
-            public string short_name { get; set; }
-            public string name { get; set; }
-            public string description { get; set; }
+            public String short_name { get; set; }
+            public String name { get; set; }
+            public String description { get; set; }
             public GroupMembers members { get; set; }
         }
 
         public class GroupMembers
         {
-            public string total { get; set; }
-            public string pending { get; set; }
-            public string confirmed { get; set; }
+            public String total { get; set; }
+            public String pending { get; set; }
+            public String confirmed { get; set; }
         }
 
         public class MessageResponse
         {
-            public int id { get; set; }
-            public int recepients_count { get; set; }
-            public string message { get; set; }
+            public Int32 id { get; set; }
+            public String username { get; set; }
+            public String sent_on { get; set; }
+            public String message { get; set; }
+            public Int32 recipients_count { get; set; }
             public List<MessageRecipients> recipients { get; set; }
+            public List<MessageRecipients> groups { get; set; }
         }
 
         public class MessageRecipients
         {
-            public string msisdn { get; set; }
+            public String msisdn { get; set; }
         }
 
         public class InboxMessageResponse
         {
-            public string status { get; set; }
-            public string msisdn { get; set; }
-            public string datetime { get; set; }
-            public string message { get; set; }
-            public int message_id { get; set; }
-            public string short_number { get; set; }
+            public String status { get; set; }
+            public String msisdn { get; set; }
+            public String datetime { get; set; }
+            public String message { get; set; }
+            public String message_id { get; set; }
+            public String short_number { get; set; }
+
+            public String created_on { get; set; }
+            public Int32  is_deleted { get; set; }
         }
 
         public class MessageToGroupResponse
         {
-            public int sms_sent { get; set; }
-            public string sms_message { get; set; }
+            public Int32 sms_sent { get; set; }
+            public String sms_message { get; set; }
         }
 
         public class ScheduleMessageResponse
         {
-            public int id { get; set; }
-            public string name { get; set; }
-            public string frequency { get; set; }
-            public string message { get; set; }
+            public Int32 id { get; set; }
+            public String name { get; set; }
+            public String frequency { get; set; }
+            public String message { get; set; }
             public DateTime date_expires { get; set; }
             public List<MessageGroup> groups { get; set; }
         }
 
         public class MessageGroup
         {
-            public string short_name{ get; set; }
+            public String short_name{ get; set; }
         }
-        
     }
 }

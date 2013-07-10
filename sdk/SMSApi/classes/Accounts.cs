@@ -15,13 +15,15 @@ namespace InteractuaMovil.ContactoSms.Api
         /// Returns the account general information
         /// </summary>
         /// <returns>List<T></returns>
-        public object Status()
+        public ResponseObjects.ApiResponse<AccountStatusResponse> Status()
         {
-            object serverResponse = this.RequestToApi("account/status", request.get, null, null);
-            if (serverResponse.GetType() == typeof(List<string>))
-                return serverResponse;
-            else
-                return JsonConvert.DeserializeObject<AccountStatusResponse>((string)serverResponse);
+            ResponseObjects.ApiResponse<AccountStatusResponse> serverResponse = this.RequestToApi<AccountStatusResponse>("account/status", request.get, null, null);
+            return serverResponse;
+            //object serverResponse = this.RequestToApi("account/status", request.get, null, null);
+            //if (serverResponse.GetType() == typeof(List<string>))
+            //    return serverResponse;
+            //else
+            //    return JsonConvert.DeserializeObject<AccountStatusResponse>((string)serverResponse);
         }
     }
 }
