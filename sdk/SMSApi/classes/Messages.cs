@@ -27,10 +27,13 @@ namespace InteractuaMovil.ContactoSms.Api
         { 
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
             
-            if( StartDate.HasValue && EndDate.HasValue )
+            if( StartDate.HasValue)
             {
-                UrlParameters.Add("start_date", StartDate.Value.ToString("yyyy-MM-dd"));
-                UrlParameters.Add("end_date", EndDate.Value.ToString("yyyy-MM-dd"));
+                UrlParameters.Add("start_date", StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+            if (EndDate.HasValue)
+            {
+                UrlParameters.Add("end_date", EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             if ( Start != -1)
                 UrlParameters.Add("start", Start.ToString());

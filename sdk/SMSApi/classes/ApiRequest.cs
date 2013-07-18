@@ -112,18 +112,24 @@ namespace InteractuaMovil.ContactoSms.Api
 
 
                 request.Method = requestType;
-                if (BodyParams.Length > 2)
-                    request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
-                request.ContentLength = byteArray.Length;
+                
+                
                 foreach (string key in Headers.Keys)
                     if (key != "Date")
                         request.Headers.Add(key, Headers[key].ToString());
                 //request.Date = Convert.ToDateTime(Headers["Date"]);
                 request.Date = DateTime.Parse(Headers["Date"], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal);
 
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-                dataStream.Close();
+                if (RType != ApiRequest.request.get)
+                {
+                    request.ContentLength = byteArray.Length;
+                    if (BodyParams.Length > 2)
+                        request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
+                    Stream dataStream = request.GetRequestStream();
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                    dataStream.Close();
+                    
+                }
 
                 WebResponse response = request.GetResponse();
                 dataResponse.httpCode = ((HttpWebResponse)response).StatusCode;
@@ -135,11 +141,11 @@ namespace InteractuaMovil.ContactoSms.Api
                     dataResponse.errorDescription = dataResponse.httpDescription;
                 }
 
-                dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
+                Stream respDataStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(respDataStream);
                 dataResponse.response = reader.ReadToEnd();
                 reader.Close();
-                dataStream.Close();
+                respDataStream.Close();
 
                 if (dataResponse.errorCode == 403)
                 {
@@ -157,27 +163,37 @@ namespace InteractuaMovil.ContactoSms.Api
             }
             catch (WebException e)
             {
-                dataResponse.httpCode = (System.Net.HttpStatusCode)Convert.ToInt32(e.Response.Headers["Status"]);
-                dataResponse.httpDescription = e.Message;
-
-                Stream dataStream = e.Response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                dataResponse.response = reader.ReadToEnd();
-                reader.Close();
-                dataStream.Close();
-
-                if (dataResponse.response != null) 
+                if (e.Response == null)
                 {
-                    ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.response);
-                    if (errorResponse.code != 0)
+                    dataResponse.errorCode = -1;
+                    dataResponse.errorDescription = e.Message;
+
+                }
+                else
+                {
+
+                    dataResponse.httpCode = (System.Net.HttpStatusCode)Convert.ToInt32(e.Response.Headers["Status"]);
+                    dataResponse.httpDescription = e.Message;
+
+                    Stream dataStream = e.Response.GetResponseStream();
+                    StreamReader reader = new StreamReader(dataStream);
+                    dataResponse.response = reader.ReadToEnd();
+                    reader.Close();
+                    dataStream.Close();
+
+                    if (dataResponse.response != null)
                     {
-                        dataResponse.errorCode = errorResponse.code;
+                        ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.response);
+                        if (errorResponse.code != 0)
+                        {
+                            dataResponse.errorCode = errorResponse.code;
+                        }
+                        else
+                        {
+                            dataResponse.errorCode = (int)dataResponse.httpCode;
+                        }
+                        dataResponse.errorDescription = errorResponse.error;
                     }
-                    else
-                    {
-                        dataResponse.errorCode = (int)dataResponse.httpCode;
-                    }
-                    dataResponse.errorDescription = errorResponse.error;
                 }
             }
             catch (Exception e)
@@ -199,7 +215,7 @@ namespace InteractuaMovil.ContactoSms.Api
             switch (RType)
             {
                 case ApiRequest.request.get:
-                    requestType = "HTTPGET";
+                    requestType = "GET";
                     break;
                 case ApiRequest.request.post:
                     requestType = "POST";

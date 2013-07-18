@@ -26,8 +26,11 @@ namespace ApiExample
 
             sdk = new SmsApi(key, secret, url);
 
-            AccountStatus();            
+            AccountStatus();  
+            
             SendSingleContactoMessage();
+
+            GetMessageLog();
 
             Console.Read();
 
@@ -74,6 +77,29 @@ namespace ApiExample
             {
                 Console.WriteLine("Enviado: {0}", response.data.sms_sent);
                 Console.WriteLine("Mensaje: {0}", response.data.sms_message);
+            }
+            else
+            {
+                Console.WriteLine("Error[{0}]: {1}", response.errorCode, response.errorDescription);
+            }
+
+        }
+
+        private static void GetMessageLog()
+        {
+            Console.WriteLine();
+            Console.WriteLine("==============================================");
+            Console.WriteLine("Prueba Listado de Mensajes");
+
+            ResponseObjects.ApiResponse<List<ResponseObjects.MessageResponse>> response = sdk.Messages.GetList(StartDate: DateTime.Today.AddDays(-17), IncludeRecipients: true);
+            Console.WriteLine("HTTP Response [{0}]: {1}", (int)response.httpCode, response.httpDescription);
+            Console.WriteLine("JSON: {0}", response.response);
+            Console.WriteLine("----");
+
+            if (response.isOk)
+            {
+                /*Console.WriteLine("Enviado: {0}", response.data.sms_sent);
+                Console.WriteLine("Mensaje: {0}", response.data.sms_message);*/
             }
             else
             {

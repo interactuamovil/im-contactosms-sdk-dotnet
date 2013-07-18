@@ -81,8 +81,8 @@ namespace InteractuaMovil.ContactoSms.Api
             public String sent_on { get; set; }
             public String message { get; set; }
             public Int32 recipients_count { get; set; }
-            public List<MessageRecipients> recipients { get; set; }
-            public List<MessageRecipients> groups { get; set; }
+            public List<String> recipients { get; set; }
+            public List<String> groups { get; set; }
         }
 
         public class MessageRecipients
