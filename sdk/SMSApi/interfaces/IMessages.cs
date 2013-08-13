@@ -13,6 +13,6 @@ namespace InteractuaMovil.ContactoSms.Api.interfaces
         ResponseObjects.ApiResponse<List<ResponseObjects.ScheduleMessageResponse>> GetSchedule();
         ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> RemoveSchedule(String MessageId);
         ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> AddSchedule(DateTime StartDate, DateTime EndDate, String Name, String Message, String Time, String Frequency, String[] Groups);
-        ResponseObjects.ApiResponse<List<ResponseObjects.InboxMessageResponse>> Inbox(DateTime? StartDate = null, DateTime? EndDate = null, int Start = -1, int Limit = -1, string Msisdn = null, int Status = -1);
+        //ResponseObjects.ApiResponse<List<ResponseObjects.InboxMessageResponse>> Inbox(DateTime? StartDate = null, DateTime? EndDate = null, int Start = -1, int Limit = -1, string Msisdn = null, int Status = -1);
     }
 }

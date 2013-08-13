@@ -26,7 +26,7 @@ namespace ApiExample
 
             sdk = new SmsApi(key, secret, url);
 
-            AccountStatus();  
+            //AccountStatus();  
             
             SendSingleContactoMessage();
 

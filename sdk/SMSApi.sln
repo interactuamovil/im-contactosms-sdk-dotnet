@@ -1,11 +1,18 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMSApi", "SMSApi\SMSApi.csproj", "{891A045E-8799-4B76-88F3-A0ACF38D5DB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiExample", "ApiExample\ApiExample.csproj", "{3F37157D-1CFB-4B38-87A4-15D71D049C97}"
 	ProjectSection(ProjectDependencies) = postProject
 		{891A045E-8799-4B76-88F3-A0ACF38D5DB2} = {891A045E-8799-4B76-88F3-A0ACF38D5DB2}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMSApi-3.5", "SMSApi\SMSApi-3.5.csproj", "{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiExample-3.5", "ApiExample\ApiExample-3.5.csproj", "{3F038225-052B-41F8-AD70-53A6F7496599}"
+	ProjectSection(ProjectDependencies) = postProject
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7} = {42BDFB1F-E6E7-4C36-B408-8F32224D04B7}
 	EndProjectSection
 EndProject
 Global
@@ -38,6 +45,26 @@ Global
 		{3F37157D-1CFB-4B38-87A4-15D71D049C97}.Release|Mixed Platforms.Build.0 = Release|x86
 		{3F37157D-1CFB-4B38-87A4-15D71D049C97}.Release|x86.ActiveCfg = Release|x86
 		{3F37157D-1CFB-4B38-87A4-15D71D049C97}.Release|x86.Build.0 = Release|x86
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{42BDFB1F-E6E7-4C36-B408-8F32224D04B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3F038225-052B-41F8-AD70-53A6F7496599}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,6 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.Web;
-using System.Web.Script.Serialization;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 
@@ -57,7 +56,7 @@ namespace InteractuaMovil.ContactoSms.Api
         }
 
         //public object RequestToApi(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, dynamic> BodyParams = null, bool AddToQueryString = false)
-        public ApiResponse<T> RequestToApi<T>(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, dynamic> BodyParams = null, bool AddToQueryString = false)
+        public ApiResponse<T> RequestToApi<T>(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, Object> BodyParams = null, bool AddToQueryString = false)
         {
             string data = "", filters = "";
             //var jss = new JavaScriptSerializer();
@@ -117,8 +116,16 @@ namespace InteractuaMovil.ContactoSms.Api
                 foreach (string key in Headers.Keys)
                     if (key != "Date")
                         request.Headers.Add(key, Headers[key].ToString());
-                //request.Date = Convert.ToDateTime(Headers["Date"]);
-                request.Date = DateTime.Parse(Headers["Date"], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal);
+                    else
+                    {
+#if NET35
+                        request.Headers.Add("X-IM-DATE", Headers[key].ToString());
+#endif
+#if NET40
+                        request.Date = DateTime.Parse(Headers["Date"], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal);
+#endif
+                    }
+
 
                 if (RType != ApiRequest.request.get)
                 {
