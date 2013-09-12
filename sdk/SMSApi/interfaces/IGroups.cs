@@ -14,5 +14,6 @@ namespace InteractuaMovil.ContactoSms.Api.interfaces
         ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> Delete(string ShortName);
         ResponseObjects.ApiResponse<List<ResponseObjects.ContactResponse>> GetContactList(string ShortName);
         ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> AddContact(string ShortName, string Msisdn);
+        ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> RemoveContact(string ShortName, string Msisdn);
     }
 }
