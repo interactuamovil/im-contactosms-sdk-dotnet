@@ -68,7 +68,7 @@ namespace ApiExample
             Console.WriteLine();
             Console.WriteLine("==============================================");
             Console.WriteLine("Prueba Envio Mensaje");
-            ResponseObjects.ApiResponse<ResponseObjects.MessageToGroupResponse> response = sdk.Messages.SendToContact(msisdn, "Prueba de mensaje");
+            ResponseObjects.ApiResponse<ResponseObjects.MessageToGroupResponse> response = sdk.Messages.SendToContact(msisdn, "Prueba de mensaje", "100");
             Console.WriteLine("HTTP Response [{0}]: {1}", (int)response.httpCode, response.httpDescription);
             Console.WriteLine("JSON: {0}", response.response);
             Console.WriteLine("----");

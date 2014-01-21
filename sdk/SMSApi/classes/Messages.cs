@@ -60,12 +60,17 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="ShortName">String array with the group's short names</param>
         /// <param name="Message">Messages content</param>
+        /// <param name="Id">Id content</param>
         /// <returns>Object with message and account information</returns>
-        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToGroups(String[] ShortName, String Message)
+        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToGroups(String[] ShortName, String Message, String Id = null)
         { 
             Dictionary<string, object> Parameters = new Dictionary<string, object>();
 			Parameters.Add("groups", ShortName);
 			Parameters.Add("message", Message);
+            if (Id != null)
+            {
+                Parameters.Add("id", Id);
+            }
 
             ResponseObjects.ApiResponse<MessageToGroupResponse> serverResponse = this.RequestToApi<MessageToGroupResponse>("messages/send", request.post, null, Parameters);
             return serverResponse;
@@ -77,17 +82,23 @@ namespace InteractuaMovil.ContactoSms.Api
             //    return JsonConvert.DeserializeObject<MessageToGroupResponse>((string)serverResponse);
         }
 
+
         /// <summary>
         /// Sends a message to a specific contact
         /// </summary>
         /// <param name="Msisdn">country code and phone number</param>
         /// <param name="Message">Messages content</param>
+        /// <param name="Id">Id content</param>
         /// <returns>Object with message info</returns>
-        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToContact(String Msisdn, String Message) 
+        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToContact(String Msisdn, String Message, String Id = null)
         {
             Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
             Parameters.Add("msisdn", Msisdn);
             Parameters.Add("message", Message);
+            if (Id != null)
+            {
+                Parameters.Add("id", Id);
+            }
 
             ResponseObjects.ApiResponse<MessageToGroupResponse> serverResponse = this.RequestToApi<MessageToGroupResponse>("messages/send_to_contact", request.post, null, Parameters);
             return serverResponse;
