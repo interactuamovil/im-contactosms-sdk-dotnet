@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
 using System.Net;
 using System.IO;
@@ -118,7 +120,7 @@ namespace InteractuaMovil.ContactoSms.Api
                         request.Headers.Add(key, Headers[key].ToString());
                     else
                     {
-#if NET35
+#if NET35 || NET20
                         request.Headers.Add("X-IM-DATE", Headers[key].ToString());
 #endif
 #if NET40
@@ -244,8 +246,13 @@ namespace InteractuaMovil.ContactoSms.Api
 
             if (Parameters.Count > 0)
             {
+#if NET20
+                var orderParameters = new List<String>(Parameters.Keys);
+                orderParameters.Sort();
+#else
                 var orderParameters = Parameters.Keys.ToList();
                 orderParameters.Sort();
+#endif
                 foreach (var key in orderParameters)
                 {
                     if (!firstParam)
