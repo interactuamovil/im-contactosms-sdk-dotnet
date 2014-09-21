@@ -66,6 +66,6 @@ Para ver el ejemplo completo visita [ApiExample/Program.cs](https://github.com/i
 
 Descarga
 --------
-Para descargar el último binario (dll): [im-contactosms-sdk-dotnet-0.1.2.zip](https://www.dropbox.com/s/qx60cr30codrq06/im-contactosms-sdk-dotnet-0.1.2.zip)
+Para ver las últimas versiones y descargar fuentes y binarios (dlls): [Descargas](https://github.com/interactuamovil/im-contactosms-sdk-dotnet/releases)
 
 
