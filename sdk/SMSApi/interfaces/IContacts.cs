@@ -6,11 +6,11 @@ namespace InteractuaMovil.ContactoSms.Api.interfaces
 {
     public interface IContacts
     {
-        ResponseObjects.ApiResponse<List<ResponseObjects.ContactResponse>> GetList(int Start = -1, int Limit = -1, string FirstName = null, string LastName = null, int Status = -1);
-        ResponseObjects.ApiResponse<ResponseObjects.ContactResponse> GetByMsisdn(string Msisdn);
-        ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> Update(string Msisdn, string FirstName = null, string LastName = null, string NewMsisdn = null);
-        ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> Add(string Msisdn, string FirstName, string LastName);
-        ResponseObjects.ApiResponse<ResponseObjects.ActionMessageResponse> Delete(string Msisdn);
-        ResponseObjects.ApiResponse<List<ResponseObjects.GroupResponse>> GetGroupList(string Msisdn);
+        ResponseObjects.ApiResponse<List<ResponseObjects.ContactJson>> GetList(List<ContactStatus> contactStatuses = null, String query = null, int start = -1, int limit = -1, bool shortResults = false);
+        ResponseObjects.ApiResponse<ResponseObjects.ContactJson> GetByMsisdn(string msisdn);
+        ResponseObjects.ApiResponse<ResponseObjects.ContactJson> Update(string countryCode, string msisdn, string firstName = null, string lastName = null);
+        ResponseObjects.ApiResponse<ResponseObjects.ContactJson> Add(string countryCode, string msisdn, string firstName = null, string lastName = null);
+        ResponseObjects.ApiResponse<ResponseObjects.ContactJson> Delete(string msisdn);
+        ResponseObjects.ApiResponse<List<ResponseObjects.GroupResponse>> GetGroupList(string msisdn);
     }
 }

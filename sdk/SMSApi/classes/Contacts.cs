@@ -5,6 +5,23 @@ using Newtonsoft.Json;
 
 namespace InteractuaMovil.ContactoSms.Api
 {
+    public enum ContactStatus
+    {
+        SUSCRIBED,
+        CONFIRMED,
+        CANCELLED,
+        INVITED
+    }
+
+    public enum AddedFrom
+    {
+        WEB_FORM,
+        FILE_UPLOAD,
+        API,
+        SUBSCRIPTION_REQUEST,
+        SMS
+    }
+
     internal class Contacts : ApiRequest, interfaces.IContacts
     {
         internal Contacts(string ApiKey, string SecretKey, string ApiUrl) : base (ApiKey, SecretKey, ApiUrl) { }
@@ -15,31 +32,26 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="Start">Starts from the contact # in the list</param>
         /// <param name="Limit">Contacts amount limit</param>
-        /// <param name="FirstName">Search for contacts with name like</param>
-        /// <param name="LastName">Search for contacts with last name like</param>
-        /// <param name="Status">0 = PENDING, 1 = CONFIRMED, 2 = CANCELLED</param>
+        /// <param name="Query">Search for contacts with 'query' in the first name, last name or msisdn</param>
+        /// <param name="contactStatuses">a combination of SUSCRIBED, CONFIRMED, CANCELLED, INVITED. Defaults to SUSCRIBED,CONFIRMED</param>
+        /// <param name="shortResults">Fetch only msisdn, first and last name</param>
         /// <returns>Object array with the contacts list</returns>
-        public ResponseObjects.ApiResponse<List<ContactResponse>> GetList(int Start = -1, int Limit = -1, string FirstName = null, string LastName = null, int Status = -1)
+        public ResponseObjects.ApiResponse<List<ContactJson>> GetList(List<ContactStatus> contactStatuses = null, String query = null, int start = -1, int limit = -1, bool shortResults = false)
         {
             Dictionary<string, string> Parameters = new Dictionary<string,string>();
-            if (Start != -1)
-                Parameters.Add("start", Start.ToString());
-            if (Limit != -1)
-                Parameters.Add("limit", Limit.ToString());
-            if (FirstName != null)
-                Parameters.Add("first_name", FirstName);
-            if (LastName != null)
-                Parameters.Add("last_name", LastName);
-            if (Status != -1)
-                Parameters.Add("status", Status.ToString());
-
-            ResponseObjects.ApiResponse<List<ContactResponse>> serverResponse = this.RequestToApi<List<ContactResponse>>("contacts", request.get, Parameters, null, true);
+            if (contactStatuses != null && contactStatuses.Count > 0)
+                Parameters.Add("status", String.Join(",",contactStatuses));
+            if (query != null)
+                Parameters.Add("query", query);
+            if (start != -1)
+                Parameters.Add("start", start.ToString());
+            if (limit != -1)
+                Parameters.Add("limit", limit.ToString());
+            if (shortResults)
+                Parameters.Add("short_results", "true");
+            
+            ResponseObjects.ApiResponse<List<ContactJson>> serverResponse = this.RequestToApi<List<ContactJson>>("contacts", request.get, Parameters, null, true);
             return serverResponse;
-            //object serverResponse = this.RequestToApi("contacts", request.get, Parameters, null, true);
-            //if (serverResponse.GetType() == typeof(List<string>))
-            //    return serverResponse;
-            //else
-            //    return JsonConvert.DeserializeObject<List<ContactResponse>>((string)serverResponse);
         }
 
         /// <summary>
@@ -47,18 +59,13 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="Msisdn">Country code + phone number</param>
         /// <returns>object with the contact information</returns>
-        public ResponseObjects.ApiResponse<ContactResponse> GetByMsisdn(string Msisdn)
+        public ResponseObjects.ApiResponse<ContactJson> GetByMsisdn(string msisdn)
         {
             Dictionary<string, string> Parameters = new Dictionary<string, string>();
-            Parameters.Add("msisdn", Msisdn);
+            Parameters.Add("msisdn", msisdn);
 
-            ResponseObjects.ApiResponse<ContactResponse> serverResponse = this.RequestToApi<ContactResponse>("contacts/" + Msisdn, request.get, Parameters, null);
+            ResponseObjects.ApiResponse<ContactJson> serverResponse = this.RequestToApi<ContactJson>("contacts/" + msisdn, request.get, Parameters, null);
             return serverResponse;
-            //object serverResponse = this.RequestToApi("contacts/" + Msisdn, request.get, Parameters, null);
-            //if (serverResponse.GetType() == typeof(List<string>))
-            //    return serverResponse;
-            //else
-            //    return JsonConvert.DeserializeObject<ContactResponse>((string)serverResponse);
         }
 
         /// <summary>
@@ -69,27 +76,37 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="LastName">Updated contacts last name</param>        
         /// <param name="NewMsisdn">msisdn to update the current one</param>
         /// <returns>Object with the result message</returns>
-        public ResponseObjects.ApiResponse<ActionMessageResponse> Update(string Msisdn, string FirstName = null, string LastName = null, string NewMsisdn = null)
+        public ResponseObjects.ApiResponse<ActionMessageResponse> Update(String countryCode, string msisdn, string firstName = null, string lastName = null)
         {
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
             Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
 
-            UrlParameters.Add("msisdn", Msisdn);
+            UrlParameters.Add("msisdn", msisdn);
 
-            if (NewMsisdn != null)
-                Parameters.Add("msisdn", NewMsisdn.ToString());
-            if (FirstName != null)
-                Parameters.Add("first_name", FirstName);
-            if (LastName != null)
-                Parameters.Add("last_name", LastName);
+            Parameters.Add("msisdn", msisdn.ToString());
+            if (firstName != null)
+                Parameters.Add("first_name", firstName);
+            if (lastName != null)
+                Parameters.Add("last_name", lastName);
 
-            ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("contacts/" + Msisdn, request.put, UrlParameters, Parameters);
+            ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("contacts/" + msisdn, request.put, UrlParameters, Parameters);
             return serverResponse;
             //object serverResponse = this.RequestToApi("contacts/" + Msisdn, request.put, UrlParameters, Parameters);
             //if (serverResponse.GetType() == typeof(List<string>))
             //    return serverResponse;
             //else
             //    return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
+        }
+
+        public ResponseObjects.ApiResponse<ActionMessageResponse> Update(ContactJson contact)
+        {
+            Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
+            Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
+
+            UrlParameters.Add("msisdn", contact.Msisdn);
+
+            ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("contacts/" + contact.Msisdn, request.put, UrlParameters, BodyObject = contact);
+            return serverResponse;
         }
 
         /// <summary>
@@ -99,27 +116,30 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="FirstName">contacts first name</param>
         /// <param name="LastName">contacts last name</param>        
         /// <returns></returns>
-        public ResponseObjects.ApiResponse<ActionMessageResponse> Add(string Msisdn, string FirstName, string LastName)
+        public ResponseObjects.ApiResponse<ActionMessageResponse> Add(string Msisdn, string FirstName = null, string LastName = null)
         {
            Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
            Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
            
            UrlParameters.Add("msisdn", Msisdn);
 
-           if (Msisdn != null)
-               Parameters.Add("msisdn", Msisdn.ToString());
-           if (FirstName != null)
-               Parameters.Add("first_name", FirstName);
-           if (LastName != null)
-               Parameters.Add("last_name", LastName);
+           ContactJson contact = new ContactJson();
+           contact.Msisdn = Msisdn;
+           contact.FirstName = FirstName;
+           contact.LastName = LastName;
 
-           ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("contacts/" + Msisdn, request.post, UrlParameters, Parameters);
-           return serverResponse;
-           //object serverResponse = this.RequestToApi("contacts/" + Msisdn, request.post, UrlParameters, Parameters);
-           //if (serverResponse.GetType() == typeof(List<string>))
-           //    return serverResponse;
-           //else
-           //    return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
+           return Add(contact);
+        }
+
+        public ResponseObjects.ApiResponse<ActionMessageResponse> Add(ContactJson contact)
+        {
+            Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
+            Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
+
+            UrlParameters.Add("msisdn", contact.Msisdn);
+
+            ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("contacts/" + contact.Msisdn, request.post, UrlParameters, BodyObject = contact);
+            return serverResponse;
         }
 
         /// <summary>
@@ -134,11 +154,6 @@ namespace InteractuaMovil.ContactoSms.Api
 
             ResponseObjects.ApiResponse<ActionMessageResponse> serverResponse = this.RequestToApi<ActionMessageResponse>("contacts/" + Msisdn, request.delete, UrlParameters, null);
             return serverResponse;
-            //object serverResponse = this.RequestToApi("contacts/" + Msisdn, request.delete, UrlParameters, null);
-            //if (serverResponse.GetType() == typeof(List<string>))
-            //    return serverResponse;
-            //else
-            //    return JsonConvert.DeserializeObject<ActionMessageResponse>((string)serverResponse);
         }
 
         /// <summary>
@@ -153,11 +168,6 @@ namespace InteractuaMovil.ContactoSms.Api
 
             ResponseObjects.ApiResponse<List<GroupResponse>> serverResponse = this.RequestToApi<List<GroupResponse>>("contacts/" + Msisdn + "/groups", request.get, UrlParameters, null);
             return serverResponse;
-            //object serverResponse = this.RequestToApi("contacts/" + Msisdn + "/groups", request.get, UrlParameters, null);
-            //if (serverResponse.GetType() == typeof(List<string>))
-            //    return serverResponse;
-            //else
-            //    return JsonConvert.DeserializeObject<List<GroupResponse>>((string)serverResponse);
         }
         
     }

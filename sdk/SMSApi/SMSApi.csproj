@@ -50,6 +50,7 @@
     <Compile Include="classes\ApiRequest.cs" />
     <Compile Include="classes\Contacts.cs" />
     <Compile Include="classes\Groups.cs" />
+    <Compile Include="classes\JsonDateTimeConverter.cs" />
     <Compile Include="classes\ResponseObjects.cs" />
     <Compile Include="interfaces\IAccounts.cs" />
     <Compile Include="interfaces\IApiRequest.cs" />

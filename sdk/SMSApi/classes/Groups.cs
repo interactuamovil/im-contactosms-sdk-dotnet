@@ -124,12 +124,12 @@ namespace InteractuaMovil.ContactoSms.Api
         /// </summary>
         /// <param name="ShortName">group short name</param>
         /// <returns></returns>
-        public ResponseObjects.ApiResponse<List<ContactResponse>> GetContactList(string ShortName)
+        public ResponseObjects.ApiResponse<List<ContactJson>> GetContactList(string ShortName)
         {
             Dictionary<string, string> UrlParameters = new Dictionary<string, string>();
             UrlParameters.Add("short_name", ShortName);
 
-            ResponseObjects.ApiResponse<List<ContactResponse>> serverResponse = this.RequestToApi<List<ContactResponse>>("groups/" + ShortName + "/contacts", request.get, UrlParameters, null);
+            ResponseObjects.ApiResponse<List<ContactJson>> serverResponse = this.RequestToApi<List<ContactJson>>("groups/" + ShortName + "/contacts", request.get, UrlParameters, null);
             return serverResponse;
             //object serverResponse = this.RequestToApi("groups/" + ShortName + "/contacts", request.get, UrlParameters, null);
             //if (serverResponse.GetType() == typeof(List<string>))

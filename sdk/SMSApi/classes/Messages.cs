@@ -5,6 +5,40 @@ using Newtonsoft.Json;
 
 namespace InteractuaMovil.ContactoSms.Api
 {
+    public enum MessageDirection { MO, MT }
+
+    public enum MessageStatus 
+    {
+        PENDING,
+        PROCESSING,
+        READY,
+        SENT,
+        UNREAD,
+        READ,
+        REPLIED,
+        FORWARDED,
+        ERROR
+    }
+
+    public enum MessageSentFrom
+    {
+        WEB,
+        API_HTTP,
+        API_REST,
+        SMS,
+        SYSTEM,
+        SCHEDULER
+    }
+
+    public enum RepeatInterval
+    {
+        MONTHLY,
+        WEEKLY,
+        DAILY,
+        HOURLY,
+        ONCE
+    }
+
     internal class Messages : ApiRequest, interfaces.IMessages
     {
 
@@ -61,7 +95,7 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="Message">Messages content</param>
         /// <param name="Id">Id content</param>
         /// <returns>Object with message and account information</returns>
-        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToGroups(String[] ShortName, String Message, String Id = null)
+        public ResponseObjects.ApiResponse<MessageResponse> SendToGroups(String[] ShortName, String Message, String Id = null)
         { 
             Dictionary<string, object> Parameters = new Dictionary<string, object>();
 			Parameters.Add("groups", ShortName);
@@ -71,7 +105,7 @@ namespace InteractuaMovil.ContactoSms.Api
                 Parameters.Add("id", Id);
             }
 
-            ResponseObjects.ApiResponse<MessageToGroupResponse> serverResponse = this.RequestToApi<MessageToGroupResponse>("messages/send", request.post, null, Parameters);
+            ResponseObjects.ApiResponse<MessageResponse> serverResponse = this.RequestToApi<MessageResponse>("messages/send", request.post, null, Parameters);
             return serverResponse;
 
             //object serverResponse = this.RequestToApi("messages/send", request.post, null, Parameters);
@@ -89,7 +123,7 @@ namespace InteractuaMovil.ContactoSms.Api
         /// <param name="Message">Messages content</param>
         /// <param name="Id">Id content</param>
         /// <returns>Object with message info</returns>
-        public ResponseObjects.ApiResponse<MessageToGroupResponse> SendToContact(String Msisdn, String Message, String Id = null)
+        public ResponseObjects.ApiResponse<MessageResponse> SendToContact(String Msisdn, String Message, String Id = null)
         {
             Dictionary<string, dynamic> Parameters = new Dictionary<string, dynamic>();
             Parameters.Add("msisdn", Msisdn);
@@ -99,7 +133,7 @@ namespace InteractuaMovil.ContactoSms.Api
                 Parameters.Add("id", Id);
             }
 
-            ResponseObjects.ApiResponse<MessageToGroupResponse> serverResponse = this.RequestToApi<MessageToGroupResponse>("messages/send_to_contact", request.post, null, Parameters);
+            ResponseObjects.ApiResponse<MessageResponse> serverResponse = this.RequestToApi<MessageResponse>("messages/send_to_contact", request.post, null, Parameters);
             return serverResponse;
 
             //object serverResponse = this.RequestToApi("messages/send_to_contact", request.post, null, Parameters);

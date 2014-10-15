@@ -9,6 +9,7 @@ using System.IO;
 using System.Web;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace InteractuaMovil.ContactoSms.Api
 {
@@ -58,7 +59,7 @@ namespace InteractuaMovil.ContactoSms.Api
         }
 
         //public object RequestToApi(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, dynamic> BodyParams = null, bool AddToQueryString = false)
-        public ApiResponse<T> RequestToApi<T>(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, Object> BodyParams = null, bool AddToQueryString = false)
+        public ApiResponse<T> RequestToApi<T>(string Url, request RType, Dictionary<string, string> UrlParams = null, Dictionary<string, Object> BodyParams = null, bool AddToQueryString = false, object BodyObject = null)
         {
             string data = "", filters = "";
             //var jss = new JavaScriptSerializer();
@@ -69,7 +70,8 @@ namespace InteractuaMovil.ContactoSms.Api
             if (BodyParams != null)
                 if (BodyParams.Count > 0)
                     data = JsonConvert.SerializeObject(BodyParams);
-            //data = jss.Serialize(BodyParams);
+            if (BodyObject != null)
+                data = JsonConvert.SerializeObject(BodyObject);
 
             if (UrlParams != null)
                 if (UrlParams.Count > 0)
@@ -141,30 +143,30 @@ namespace InteractuaMovil.ContactoSms.Api
                 }
 
                 WebResponse response = request.GetResponse();
-                dataResponse.httpCode = ((HttpWebResponse)response).StatusCode;
-                dataResponse.httpDescription = ((HttpWebResponse)response).StatusDescription;
+                dataResponse.HttpCode = ((HttpWebResponse)response).StatusCode;
+                dataResponse.HttpDescription = ((HttpWebResponse)response).StatusDescription;
 
-                if (dataResponse.httpCode != System.Net.HttpStatusCode.OK)
+                if (dataResponse.HttpCode != System.Net.HttpStatusCode.OK)
                 {
-                    dataResponse.errorCode = (int)dataResponse.httpCode;
-                    dataResponse.errorDescription = dataResponse.httpDescription;
+                    dataResponse.ErrorCode = (int)dataResponse.HttpCode;
+                    dataResponse.ErrorDescription = dataResponse.HttpDescription;
                 }
 
                 Stream respDataStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(respDataStream);
-                dataResponse.response = reader.ReadToEnd();
+                dataResponse.Response = reader.ReadToEnd();
                 reader.Close();
                 respDataStream.Close();
-
-                if (dataResponse.errorCode == 403)
+                        
+                if (dataResponse.ErrorCode == 403)
                 {
-                    ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.response);
-                    dataResponse.errorDescription = errorResponse.error;
+                    ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.Response);
+                    dataResponse.ErrorDescription = errorResponse.error;
                     //dataResponse.errorDescription = "Invalid Authentication";
                 }
                 else
                 {
-                    dataResponse.data = JsonConvert.DeserializeObject<T>(dataResponse.response); 
+                    dataResponse.Data = JsonConvert.DeserializeObject<T>(dataResponse.Response); 
                 }
 
                 response.Close();
@@ -174,41 +176,41 @@ namespace InteractuaMovil.ContactoSms.Api
             {
                 if (e.Response == null)
                 {
-                    dataResponse.errorCode = -1;
-                    dataResponse.errorDescription = e.Message;
+                    dataResponse.ErrorCode = -1;
+                    dataResponse.ErrorDescription = e.Message;
 
                 }
                 else
                 {
 
-                    dataResponse.httpCode = (System.Net.HttpStatusCode)Convert.ToInt32(e.Response.Headers["Status"]);
-                    dataResponse.httpDescription = e.Message;
+                    dataResponse.HttpCode = (System.Net.HttpStatusCode)Convert.ToInt32(e.Response.Headers["Status"]);
+                    dataResponse.HttpDescription = e.Message;
 
                     Stream dataStream = e.Response.GetResponseStream();
                     StreamReader reader = new StreamReader(dataStream);
-                    dataResponse.response = reader.ReadToEnd();
+                    dataResponse.Response = reader.ReadToEnd();
                     reader.Close();
                     dataStream.Close();
 
-                    if (dataResponse.response != null)
+                    if (dataResponse.Response != null)
                     {
-                        ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.response);
+                        ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.Response);
                         if (errorResponse.code != 0)
                         {
-                            dataResponse.errorCode = errorResponse.code;
+                            dataResponse.ErrorCode = errorResponse.code;
                         }
                         else
                         {
-                            dataResponse.errorCode = (int)dataResponse.httpCode;
+                            dataResponse.ErrorCode = (int)dataResponse.HttpCode;
                         }
-                        dataResponse.errorDescription = errorResponse.error;
+                        dataResponse.ErrorDescription = errorResponse.error;
                     }
                 }
             }
             catch (Exception e)
             {
-                dataResponse.errorCode = -1;
-                dataResponse.errorDescription = e.Message;
+                dataResponse.ErrorCode = -1;
+                dataResponse.ErrorDescription = e.Message;
             }
             finally
             {
@@ -257,7 +259,7 @@ namespace InteractuaMovil.ContactoSms.Api
                 {
                     if (!firstParam)
                         queryString += "&";
-                    queryString += key + "=" + Parameters[key];
+                    queryString += key + "=" + UrlEncodeUpperCase(Parameters[key]);
                     firstParam = false;
                 }
             }
@@ -276,6 +278,12 @@ namespace InteractuaMovil.ContactoSms.Api
             Byte[] hashResult = hasher.ComputeHash(utf8EncodedString);
 
             return Convert.ToBase64String(hashResult);
+        }
+
+        static string UrlEncodeUpperCase(string value)
+        {
+            value = HttpUtility.UrlEncode(value);
+            return Regex.Replace(value, "(%[0-9a-f][0-9a-f])", c => c.Value.ToUpper());
         }
 
     }
