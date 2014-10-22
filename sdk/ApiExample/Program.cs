@@ -9,7 +9,7 @@ namespace ApiExample
     class Program
     {
 
-        static string msisdn = "50244721242";
+        
         static InteractuaMovil.ContactoSms.Api.SmsApi sdk;
 
         static void Main(string[] args)
@@ -26,19 +26,24 @@ namespace ApiExample
             sdk = new SmsApi(key, secret, url);
 
             string groupName = "Fijese";
+            string msisdn = "50244721242";
 
+            //Test procedure for account
             //AccountStatus();  
+
+            //Test procedures for contacts
             //CreateNewContact();
             //GetContactByMsisdn();
             //SendSingleContactoMessage();
             //GetMessageLog();
 
-            //AddGroup();
+            //Test procedures for groups
+            //AddGroup(groupName);
             //GetGroupList();
             //GetGroup(groupName);
             //GetContactListbyGroup(groupName);
-            //DeleteGroup();
-            //AddContactToGroup();
+            //DeleteGroup(groupName);
+            //AddContactToGroup(groupName, msisdn);
             //RemoveContactFromGroup(groupName, msisdn);
             //UpdateGroup();
 
@@ -50,7 +55,7 @@ namespace ApiExample
         {
             Console.WriteLine("Demo API SDK .net");
             Console.WriteLine("==============================================");
-            Console.WriteLine("Prueba Consulta Status");
+            Console.WriteLine("Prueba Consulta Lista de Grupos");
 
             ResponseObjects.ApiResponse<List<InteractuaMovil.ContactoSms.Api.ResponseObjects.GroupResponse>> groups = sdk.Groups.GetList();
             if (groups.isOk)
@@ -71,7 +76,7 @@ namespace ApiExample
         {
             Console.WriteLine("Demo API SDK .net");
             Console.WriteLine("==============================================");
-            Console.WriteLine("Prueba Consulta Status");
+            Console.WriteLine("Prueba Consulta Grupo");
 
             ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.GroupResponse> group = sdk.Groups.Get(groupName);
             if (group.isOk)
@@ -109,13 +114,13 @@ namespace ApiExample
             }
         }
 
-        private static void DeleteGroup()
+        private static void DeleteGroup(string groupName)
         {
             Console.WriteLine("Demo API SDK .net");
             Console.WriteLine("==============================================");
             Console.WriteLine("Prueba Eliminar Grupos");
 
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Delete("Fijese");
+            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Delete(groupName);
             if (group.isOk)
             {
                 Console.WriteLine("Group deleted");
@@ -127,13 +132,13 @@ namespace ApiExample
             }
         }
 
-        private static void AddGroup()
+        private static void AddGroup(string groupName)
         {
             Console.WriteLine("Demo API SDK .net");
             Console.WriteLine("==============================================");
             Console.WriteLine("Prueba Agregar Grupos");
 
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Add("Fijese","Fijese","Test group");
+            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Add(groupName, "Fijese", "Test group");
             if (group.isOk)
             {
                 Console.WriteLine("Group added");
@@ -145,13 +150,13 @@ namespace ApiExample
             }
         }
 
-        private static void AddContactToGroup()
+        private static void AddContactToGroup(string groupName, string msisdn)
         {
             Console.WriteLine("Demo API SDK .net");
             Console.WriteLine("==============================================");
             Console.WriteLine("Prueba Agregar Contacto a Grupos");
 
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.AddContact("Fijese", msisdn);
+            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.AddContact(groupName, msisdn);
             if (group.isOk)
             {
                 Console.WriteLine("Contact added to group");
@@ -183,13 +188,13 @@ namespace ApiExample
 
         }
 
-        private static void UpdateGroup()
+        private static void UpdateGroup(string groupName)
         {
             Console.WriteLine("Demo API SDK .net");
             Console.WriteLine("==============================================");
             Console.WriteLine("Prueba Modificar Grupos");
 
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Update("Fijese","Fijese 1","Grupo de prueba");
+            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Update(groupName,"Fijese 1","Grupo de prueba");
             if (group.isOk)
             {
                 Console.WriteLine("Group updated" + group.Data.result);
@@ -250,12 +255,12 @@ namespace ApiExample
 
         }
 
-        public static void CreateNewContact()
+        public static void CreateNewContact(string msisdn)
         {
             Console.WriteLine();
             Console.WriteLine("==============================================");
             Console.WriteLine("Prueba Crear Contacto");
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ContactJson> Contact = sdk.Contacts.Add("502","50230535379","Gerardo","Garcia");
+            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ContactJson> Contact = sdk.Contacts.Add("502", msisdn, "Gerardo", "Garcia");
             if (Contact.isOk)
             {
                 Console.WriteLine(Contact.Data.FirstName + " " + Contact.Data.LastName);
@@ -270,7 +275,7 @@ namespace ApiExample
 
         }
 
-        public static void GetContactByMsisdn()
+        public static void GetContactByMsisdn(string msisdn)
         {
             Console.WriteLine();
             Console.WriteLine("==============================================");
