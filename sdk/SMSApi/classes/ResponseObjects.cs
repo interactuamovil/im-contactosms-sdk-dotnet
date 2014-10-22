@@ -85,10 +85,10 @@ namespace InteractuaMovil.ContactoSms.Api
             [JsonPropertyAttribute("tags")]
             public List<String> Tags;
 
-            public String msisdn { get; set; }
-            public String first_name { get; set; }
-            public String last_name { get; set; }
-            public String status { get; set; }
+            //public String msisdn { get; set; }
+            //public String first_name { get; set; }
+            //public String last_name { get; set; }
+            //public String status { get; set; }
         }
 
         public class ActionMessageResponse
