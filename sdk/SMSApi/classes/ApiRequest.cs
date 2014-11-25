@@ -115,8 +115,8 @@ namespace InteractuaMovil.ContactoSms.Api
 
 
                 request.Method = requestType;
-                
-                
+
+                request.Headers.Add("X-IM-ORIGIN", "IM_SDK_DOTNET");
                 foreach (string key in Headers.Keys)
                     if (key != "Date")
                         request.Headers.Add(key, Headers[key].ToString());

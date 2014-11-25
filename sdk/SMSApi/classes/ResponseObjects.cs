@@ -85,10 +85,10 @@ namespace InteractuaMovil.ContactoSms.Api
             [JsonPropertyAttribute("tags")]
             public List<String> Tags;
 
-            public String msisdn { get; set; }
-            public String first_name { get; set; }
-            public String last_name { get; set; }
-            public String status { get; set; }
+            //public String msisdn { get; set; }
+            //public String first_name { get; set; }
+            //public String last_name { get; set; }
+            //public String status { get; set; }
         }
 
         public class ActionMessageResponse
@@ -101,6 +101,7 @@ namespace InteractuaMovil.ContactoSms.Api
             public String short_name { get; set; }
             public String name { get; set; }
             public String description { get; set; }
+            public List<String> tags { get; set; }
             public GroupMembers members { get; set; }
         }
 
@@ -109,6 +110,7 @@ namespace InteractuaMovil.ContactoSms.Api
             public String total { get; set; }
             public String pending { get; set; }
             public String confirmed { get; set; }
+            public String cancelled { get; set; }
         }
 
         
