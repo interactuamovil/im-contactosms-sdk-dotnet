@@ -101,6 +101,7 @@ namespace InteractuaMovil.ContactoSms.Api
             public String short_name { get; set; }
             public String name { get; set; }
             public String description { get; set; }
+            public List<String> tags { get; set; }
             public GroupMembers members { get; set; }
         }
 
@@ -109,6 +110,7 @@ namespace InteractuaMovil.ContactoSms.Api
             public String total { get; set; }
             public String pending { get; set; }
             public String confirmed { get; set; }
+            public String cancelled { get; set; }
         }
 
         

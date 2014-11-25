@@ -59,6 +59,7 @@ namespace InteractuaMovil.ContactoSms.Api
 
             UrlParameters.Add("short_name", ShortName);
 
+            Parameters.Add("short_name", ShortName);
             Parameters.Add("name", Name);
             Parameters.Add("description", Description);
             if (NewShortName != null)
