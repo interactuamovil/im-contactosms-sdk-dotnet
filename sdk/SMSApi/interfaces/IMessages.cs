@@ -4,9 +4,10 @@ using System.Text;
 
 namespace InteractuaMovil.ContactoSms.Api.interfaces
 {
+
     public interface IMessages
     {
-        ResponseObjects.ApiResponse<List<ResponseObjects.MessageResponse>> GetList(DateTime? StartDate = null, DateTime? EndDate = null, Int32 Start = -1, Int32 Limit = -1, String Msisdn = null, String ShortName = null, Boolean IncludeRecipients = false);
+        ResponseObjects.ApiResponse<List<ResponseObjects.MessageResponse>> GetList(DateTime? StartDate = null, DateTime? EndDate = null, Int32 Start = -1, Int32 Limit = -1, String Msisdn = null, String ShortName = null, Boolean IncludeRecipients = false, MessageDirection Direction = MessageDirection.MT, String Username = null );
         ResponseObjects.ApiResponse<ResponseObjects.MessageResponse> SendToGroups(String[] ShortName, String Message, String Id = null);
         ResponseObjects.ApiResponse<ResponseObjects.MessageResponse> SendToContact(String Msisdn, String Message, String Id = null);
         ResponseObjects.ApiResponse<List<ResponseObjects.ScheduleMessageResponse>> GetSchedule();
