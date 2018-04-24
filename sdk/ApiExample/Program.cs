@@ -22,7 +22,7 @@ namespace ApiExample
 
             // API Url
             string url = ""; /* ej: http://<url>/api/ */
-            
+
 
             sdk = new SmsApi(key, secret, url);
 
@@ -33,7 +33,7 @@ namespace ApiExample
 
 
             /****** Test for messages ******/
-            SendMessageToContact(msisdn);
+            //SendMessageToContact(msisdn);
             //SendMessageToGroup(groupName);
 
             //GetMessageLog();
@@ -44,16 +44,10 @@ namespace ApiExample
             //GetContactByMsisdn(msisdn);
 
             /****** Test procedures for groups *******/
-            //AddGroup(groupName);
             //GetGroupList();
             //GetGroup(groupName);
-            //AddContactToGroup(groupName, msisdn);
             //GetContactListbyGroup(groupName);
-            //RemoveContactFromGroup(groupName, msisdn);
-            //GetContactListbyGroup(groupName);
-            //UpdateGroup(groupName);
-            //GetGroup(groupName);
-            //DeleteGroup(groupName);
+            DeleteGroup(groupName);
             
             
             
@@ -136,80 +130,6 @@ namespace ApiExample
             if (group.isOk)
             {
                 Console.WriteLine("Group deleted");
-
-            }
-            else
-            {
-                Console.WriteLine("Error[{0}]: {1}", group.ErrorCode, group.ErrorDescription);
-            }
-        }
-
-        private static void AddGroup(string groupName)
-        {
-            Console.WriteLine("Demo API SDK .net");
-            Console.WriteLine("==============================================");
-            Console.WriteLine("Prueba Agregar Grupos");
-
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Add(groupName, "Fijese", "Test group");
-            if (group.isOk)
-            {
-                Console.WriteLine("Group added");
-
-            }
-            else
-            {
-                Console.WriteLine("Error[{0}]: {1}", group.ErrorCode, group.ErrorDescription);
-            }
-        }
-
-        private static void AddContactToGroup(string groupName, string msisdn)
-        {
-            Console.WriteLine("Demo API SDK .net");
-            Console.WriteLine("==============================================");
-            Console.WriteLine("Prueba Agregar Contacto a Grupos");
-
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.AddContact(groupName, msisdn);
-            if (group.isOk)
-            {
-                Console.WriteLine("Contact added to group");
-
-            }
-            else
-            {
-                Console.WriteLine("Error[{0}]: {1}", group.ErrorCode, group.ErrorDescription);
-            }
-
-        }
-
-        private static void RemoveContactFromGroup(string groupName, string Msisdn)
-        {
-            Console.WriteLine("Demo API SDK .net");
-            Console.WriteLine("==============================================");
-            Console.WriteLine("Prueba Eliminar Contacto de Grupo");
-
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.RemoveContact(groupName, Msisdn);
-            if (group.isOk)
-            {
-                Console.WriteLine("Contact deleted from group");
-
-            }
-            else
-            {
-                Console.WriteLine("Error[{0}]: {1}", group.ErrorCode, group.ErrorDescription);
-            }
-
-        }
-
-        private static void UpdateGroup(string groupName)
-        {
-            Console.WriteLine("Demo API SDK .net");
-            Console.WriteLine("==============================================");
-            Console.WriteLine("Prueba Modificar Grupos");
-
-            ResponseObjects.ApiResponse<InteractuaMovil.ContactoSms.Api.ResponseObjects.ActionMessageResponse> group = sdk.Groups.Update(groupName,"Fijese 1","Grupo de prueba");
-            if (group.isOk)
-            {
-                Console.WriteLine("Group updated" + group.Data.result);
 
             }
             else

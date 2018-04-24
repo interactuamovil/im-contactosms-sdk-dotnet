@@ -101,7 +101,7 @@ namespace InteractuaMovil.ContactoSms.Api
         public ResponseObjects.ApiResponse<MessageResponse> SendToGroups(String[] ShortName, String Message, String Id = null)
         { 
             Dictionary<string, object> Parameters = new Dictionary<string, object>();
-			Parameters.Add("groups", ShortName);
+			Parameters.Add("tags", ShortName);
 			Parameters.Add("message", Message);
             if (Id != null)
             {
