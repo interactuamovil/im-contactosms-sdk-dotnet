@@ -159,7 +159,7 @@ namespace InteractuaMovil.ContactoSms.Api
             [JsonPropertyAttribute("total_monitors")]
             public Int32 TotalMonitors;
     
-            [JsonPropertyAttribute("groups")]
+            [JsonPropertyAttribute("tags")]
             public List<String> Groups;
     
             [JsonPropertyAttribute("recipients")]
@@ -189,7 +189,7 @@ namespace InteractuaMovil.ContactoSms.Api
         {
             [JsonPropertyAttribute("scheduled_message_id")]
             public Int32 ScheduledMessageId;
-            [JsonPropertyAttribute("groups")] 
+            [JsonPropertyAttribute("tags")] 
             public List<String> Groups;
             [JsonPropertyAttribute("message")] 
             public String Message;
