@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+#if !NET20
 using System.Linq;
+#endif
 using System.Text;
 
 namespace InteractuaMovil.ContactoSms.Api

@@ -41,7 +41,14 @@ namespace InteractuaMovil.ContactoSms.Api
         {
             Dictionary<string, string> Parameters = new Dictionary<string,string>();
             if (contactStatuses != null && contactStatuses.Count > 0)
-                Parameters.Add("status", String.Join(",",contactStatuses));
+            {
+                var statusList = new List<String>();
+                foreach (var s in contactStatuses)
+                {
+                    statusList.Add(s.ToString());
+                }
+                Parameters.Add("status", String.Join(",", statusList.ToArray()));
+            }
             if (query != null)
                 Parameters.Add("query", query);
             if (start != -1)
