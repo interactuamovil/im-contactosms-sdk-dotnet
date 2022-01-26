@@ -117,7 +117,7 @@ namespace InteractuaMovil.ContactoSms.Api
         public class MessageResponse
         {
             [JsonPropertyAttribute("message_id")]
-            public Int32 MessageId { get; set; }
+            public String MessageId { get; set; }
             [JsonPropertyAttribute("short_code")]
             public String ShortCode;
             [JsonPropertyAttribute("type")]
