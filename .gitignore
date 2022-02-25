@@ -4,6 +4,7 @@ obj
 *.user
 *.suo
 *.userprefs
+.idea
 
 # mstest test results
 TestResults

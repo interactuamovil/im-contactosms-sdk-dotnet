@@ -194,16 +194,24 @@ namespace InteractuaMovil.ContactoSms.Api
 
                     if (dataResponse.Response != null)
                     {
-                        ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.Response);
-                        if (errorResponse.code != 0)
+                        try
                         {
-                            dataResponse.ErrorCode = errorResponse.code;
+                            ResponseObjects.ErrorResponse errorResponse = JsonConvert.DeserializeObject<ResponseObjects.ErrorResponse>(dataResponse.Response);                        
+                            if (errorResponse.code != 0)
+                            {
+                                dataResponse.ErrorCode = errorResponse.code;
+                            }
+                            else
+                            {
+                                dataResponse.ErrorCode = (int)dataResponse.HttpCode;
+                            }
+                            dataResponse.ErrorDescription = errorResponse.error;
                         }
-                        else
-                        {
-                            dataResponse.ErrorCode = (int)dataResponse.HttpCode;
+                        catch (JsonReaderException jre)
+                        {                            
+                            dataResponse.ErrorCode = -1;
+                            dataResponse.ErrorDescription = "HTTP Response [" + dataResponse.HttpCode + "]: " + dataResponse.HttpDescription +" URL "+Url;
                         }
-                        dataResponse.ErrorDescription = errorResponse.error;
                     }
                 }
             }
