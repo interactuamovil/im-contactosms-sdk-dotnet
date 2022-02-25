@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -45,6 +46,7 @@
     <Compile Include="classes\ApiRequest.cs" />
     <Compile Include="classes\Contacts.cs" />
     <Compile Include="classes\Groups.cs" />
+    <Compile Include="classes\JsonDateTimeConverter.cs" />
     <Compile Include="classes\Messages.cs" />
     <Compile Include="classes\ResponseObjects.cs" />
     <Compile Include="interfaces\IAccounts.cs" />
